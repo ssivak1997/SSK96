@@ -51,7 +51,7 @@ def calc_ret_factor(growth_rate, infl_rate, post_ret_period):
     r = ((growth_rate-infl_rate)/100)/12
     a = ((1+r)**n)-1
     b = r*((1+r)**n)
-    return(a/b)
+    return (a/b)
 def calc_ret_savings_factor(age, ret_age, growth_rate):
     # print("Inside ret savings factor calculation function:")
     # print(age)
@@ -63,4 +63,4 @@ def calc_ret_savings_factor(age, ret_age, growth_rate):
     # print("r = " + str(r))
     f = ((1+r)**n)-1
     # print("f = " + str(f))
-    return(f/r)
+    return (f/r)

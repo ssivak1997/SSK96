@@ -3,14 +3,7 @@ from operationsFunction import *
 # Getting the information from the user
 name = input("Enter your name: ")
 age = int(input("Enter your age: "))
-father_name = input("Enter your father name: ")
-x = input("Is " + father_name + " alive? (Y/N): ")
-if x in ("Y", "y"):
-    father_age = int(input("Enter " + father_name + "'s age: "))
-mother_name = input("Enter your mother name: ")
-y = input("Is " + mother_name + " alive? (Y/N): ")
-if y in ("Y", "y"):
-    mother_age = int(input("Enter " + mother_name + "'s age: "))
+parental_dependency = int(input("Enter the number of dependants(Consider only parents - Mother and Father): "))
 print("Select your marital status:\n1. Single\n2. Married")
 marital_status = input("Marital Status: ")
 child_count = 0
@@ -89,21 +82,33 @@ if marital_status in ('Married', 'married', 'M', 'm', '2') and child_count > 0:
         i += 1
 print("TOTAL LIABILITIES:")
 personal_loan = int(input("Enter the value of personal loan amount: "))
-gold_loan = int(input("Enter the value of gold loan amount: "))
-misc_loan = int(input("Enter the value of miscellaneous loan amount: "))
-print("The value of housing loan is: " + str(housing_loan))
-print("The value of car loan is: " + str(car_loan))
-if hl in("Y", "y") and cl in ("Y", "y"):
-    emi = housing_loan_emi + car_loan_emi
-elif hl in("Y", "y") and cl in ("N", "n"):
-    emi = housing_loan_emi
-elif hl in("N", "n") and cl in ("Y", "y"):
-    emi = car_loan_emi
+if personal_loan > 0:
+    personal_loan_emi = int(input("Enter the monthly emi amount: "))
 else:
-    emi = 0
-print("Total emi: " + str(emi))
+    personal_loan_emi = 0
+gold_loan = int(input("Enter the value of gold loan amount: "))
+if gold_loan > 0:
+    gold_loan_emi = int(input("Enter the monthly emi amount: "))
+else:
+    gold_loan_emi = 0
+misc_loan = int(input("Enter the value of miscellaneous loan amount: "))
+if misc_loan > 0:
+    misc_loan_emi = int(input("Enter the monthly emi amount: "))
+else:
+    misc_loan_emi = 0
+# print("The value of housing loan is: " + str(housing_loan))
+# print("The value of car loan is: " + str(car_loan))
+if hl in("Y", "y") and cl in ("Y", "y"):
+    emi = housing_loan_emi + car_loan_emi + personal_loan_emi + gold_loan_emi + misc_loan_emi
+elif hl in("Y", "y") and cl in ("N", "n"):
+    emi = housing_loan_emi + personal_loan_emi + gold_loan_emi + misc_loan_emi
+elif hl in("N", "n") and cl in ("Y", "y"):
+    emi = car_loan_emi + personal_loan_emi + gold_loan_emi + misc_loan_emi
+else:
+    emi = personal_loan_emi + gold_loan_emi + misc_loan_emi
+# print("Total emi: " + str(emi))
 tl = personal_loan + gold_loan + misc_loan + housing_loan + car_loan
-print("Total liabilities : " + str(tl))
+# print("Total liabilities : " + str(tl))
 ret_age = int(input("What is your planned retirement age? "))
 post_ret_period = int(input("Enter the post retirement period in years: "))
 exp_inflation_rate = int(input("Enter the expected inflation rate: "))
@@ -115,15 +120,15 @@ ideal_tli = calc_ideal_term_insurance(income, tl)
 ideal_medi_claim_sum = calc_ideal_medic_insurance(income)
 ideal_medi_claim_premium = calc_ideal_medic_insurance_premium(income)
 print("\nPROTECTIVE INVESTMENT:")
-print(" \t\t\t\t\t\t\t\tCURRENT VALUE\tIDEAL VALUE")
-print("Term Life Insurance \t\t\t\t" + str(tli_sum) + " \t\t\t\t\t\t\t\t\t" + str(ideal_tli))
-print("Medical Insurance - Sum Insured \t" + str(mediclaim_sum) + " \t\t\t\t\t\t" + str(ideal_medi_claim_sum))
-print("Medical Insurance - Premium \t\t" + str(mediclaim_premium) + " \t\t\t\t" + str(ideal_medi_claim_premium))
+print(" \t\t\t\t\t\t\t\tCURRENT VALUE\t\tIDEAL VALUE")
+print("Term Life Insurance \t\t\t\t" + str(tli_sum) + " \t\t\t\t\t" + str(ideal_tli))
+print("Medical Insurance - Sum Insured \t" + str(mediclaim_sum) + " \t\t" + str(ideal_medi_claim_sum))
+print("Medical Insurance - Premium \t\t" + str(mediclaim_premium) + " \t" + str(ideal_medi_claim_premium))
 print("*" * 10)
 
 # Calculating the Short Term Goals and its optimal planning
 print("\nSHORT TERM GOALS:")
-if hl in ("N","n") and house_goal in ("Y","y"):
+if hl in ("N", "n") and house_goal in ("Y", "y"):
     ideal_housing_goal = calc_housing_plan(house_estmtn, house_eta, house_savings, exp_growth_rate)
     print("1. House Goal:")
     print("Total value of house: " + str(house_estmtn))
@@ -131,7 +136,7 @@ if hl in ("N","n") and house_goal in ("Y","y"):
     print("Current Savings for downpayment: " + str(house_savings))
     print("Balance to be saved: " + str(int(int(house_estmtn) * 0.3) - int(house_savings)))
     print("Monthly savings required for down payment: " + str(ideal_housing_goal))
-elif cl in ("N","n") and car_goal in ("Y","y"):
+elif cl in ("N", "n") and car_goal in ("Y", "y"):
     ideal_car_goal = calc_car_plan(car_estmtn, car_eta, car_savings, exp_growth_rate)
     print("\n2. Car Goal:")
     print("Total value of car: " + str(car_estmtn))
@@ -152,7 +157,7 @@ if child_count > 0:
         edctn_cost = calc_edcn_plan(child_age[i], child_education_planned_age[i], child_education_cost[i],
                                     child_education_current_savings[i], exp_growth_rate, exp_inflation_rate)
         infl_adj_edcn_cost.append(edctn_cost)
-        print("Education Plan for " + child[i] + ":")
+        print("\nEducation Plan for " + child[i] + ":")
         print("Current age of " + child[i] + ": " + str(child_age[i]))
         print("Age of " + child[i] + " while entering higher education: " + str(child_education_planned_age[i]))
         print("Current cost of  higher education of " + child[i] + ": " + str(child_education_cost[i]))
@@ -172,24 +177,24 @@ print("*"*10)
 # Calculating the retirement plan
 annl_amnt = calc_annual_exp(age, ret_age, expense, exp_inflation_rate)
 pst_rtrmnt_fct = calc_ret_factor(exp_growth_rate, exp_inflation_rate, post_ret_period)
-pst_rtrmnt_req_amnt = annl_amnt*pst_rtrmnt_fct
+pst_rtrmnt_req_amnt = int(annl_amnt*pst_rtrmnt_fct)
 ret_savings_factor = calc_ret_savings_factor(age, ret_age, exp_growth_rate)
-pst_rtrmnt_savings = pst_rtrmnt_req_amnt/ret_savings_factor
+pst_rtrmnt_savings = int(pst_rtrmnt_req_amnt/ret_savings_factor)
 print("\nRETIREMENT PLAN:")
 print("Post retirement required amount: " + str(pst_rtrmnt_req_amnt))
-print("Post retirement savings factor: " + str(ret_savings_factor))
+# print("Post retirement savings factor: " + str(ret_savings_factor))
 print("Monthly savings for retirement: " + str(pst_rtrmnt_savings))
 # Consolidating the summary of the financial planning done so far
 print("#"*10)
 print("\nSUMMARY OF FINANCIAL PLANNING")
-monthly_tli = (ideal_tli*0.0005)/12
-monthly_mediclaim = ideal_medi_claim_premium/12
-if x in ("Y", "y") and y in ("Y", "y"):
-    parental_monthly_tli = monthly_tli*2
-    parental_monthly_mediclaim = monthly_mediclaim*2
-elif x in ("Y", "y") or y in ("Y", "y"):
-    parental_monthly_tli = monthly_tli*0.5
-    parental_monthly_mediclaim = monthly_mediclaim*0.5
+monthly_tli = int((ideal_tli*0.0005)/12)
+monthly_mediclaim = int(ideal_medi_claim_premium/12)
+if parental_dependency == 2:
+    parental_monthly_tli = int(monthly_tli*2)
+    parental_monthly_mediclaim = int(monthly_mediclaim*2)
+elif parental_dependency == 1:
+    parental_monthly_tli = int(monthly_tli*0.5)
+    parental_monthly_mediclaim = int(monthly_mediclaim*0.5)
 else:
     parental_monthly_tli = 0
     parental_monthly_mediclaim = 0
@@ -203,6 +208,9 @@ total_insurance = monthly_mediclaim+monthly_tli+parental_monthly_tli+parental_mo
 print("Total Insurance: " + str(total_insurance))
 print("\nHousing Loan EMI: " + str(housing_loan_emi))
 print("Car Loan EMI: " + str(car_loan_emi))
+print("Personal Loan EMI: " + str(car_loan_emi))
+print("Gold Loan EMI: " + str(car_loan_emi))
+print("Miscellaneous Loan EMI: " + str(car_loan_emi))
 print("Total EMI: " + str(emi))
 print("\n")
 if child_count > 0:
@@ -219,6 +227,6 @@ print("Total Savings: " + str(total_savings))
 net_amnt = income - (total_savings+emi+total_insurance+expense)
 print("\nNet amount of income-expense summary is " + str(net_amnt))
 if net_amnt > 0:
-    print("Your income-expense net amount is surplus and you can consider investing more")
+    print("Your income-expense net amount is surplus and you can consider investing more. \n The additional savings amount which you can consider investing more is " + str(net_amnt))
 else:
-    print("Your income-expense net amount is deficit and you should consider increasing your income or reducing your expenses")
+    print("Your income-expense net amount is deficit and you should consider increasing your income or reducing your expenses. \n The excess amount being spent and which needs to be considered to reduce is " + str(net_amnt))
